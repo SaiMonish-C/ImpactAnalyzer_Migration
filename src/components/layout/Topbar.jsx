@@ -1,7 +1,23 @@
-function Topbar({ theme, onToggleTheme }) {
+function Topbar({ theme, onToggleTheme, onBrandClick }) {
+  function handleBrandKey(e) {
+    if (e.key === 'Enter') {
+      onBrandClick()
+    } else if (e.key === ' ') {
+      e.preventDefault()
+      onBrandClick()
+    }
+  }
+
   return (
     <nav className="topbar">
-      <div className="topbar-brand" id="brand-btn" role="button" tabIndex="0">
+      <div
+        className="topbar-brand"
+        id="brand-btn"
+        role="button"
+        tabIndex="0"
+        onClick={onBrandClick}
+        onKeyDown={handleBrandKey}
+      >
         <div className="brand-mark">IA</div>
         <span className="brand-name">ImpactAnalyzer</span>
       </div>

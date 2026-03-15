@@ -4,7 +4,7 @@ import PspCharts from './PspCharts'
 import WarningsPanel from './WarningsPanel'
 import { IconCheck, IconFile, IconDownload, IconClock } from '../Icons'
 
-function SingleResults({ data, fileName, onExport, onNew }) {
+function SingleResults({ data, fileName, theme, onExport, onNew }) {
   return (
     <div className="results-page">
       <div className="results-header stagger stagger-1">
@@ -31,7 +31,7 @@ function SingleResults({ data, fileName, onExport, onNew }) {
 
       <SummaryCards summary={data.summary} />
       <CurrencyTable data={data.by_currency} />
-      <PspCharts byPsp={data.by_psp} />
+      <PspCharts byPsp={data.by_psp} theme={theme} />
       <WarningsPanel warnings={data.warnings} />
     </div>
   )

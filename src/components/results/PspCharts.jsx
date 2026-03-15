@@ -16,7 +16,7 @@ function fmtCompact(n) {
   return '$' + n.toFixed(0)
 }
 
-function PspCharts({ byPsp }) {
+function PspCharts({ byPsp, theme }) {
   const canvasRef = useRef(null)
   const chartRef  = useRef(null)
   const [expanded, setExpanded] = useState(false)
@@ -27,7 +27,7 @@ function PspCharts({ byPsp }) {
 
     chartRef.current?.destroy()
 
-    const dark         = document.documentElement.getAttribute('data-theme') !== 'light'
+    const dark         = theme !== 'light'
     const creditColor  = dark ? '#34D399' : '#10B981'
     const debitColor   = dark ? '#F87171' : '#EF4444'
     const chartText    = dark ? '#F9F9F9' : '#111827'
@@ -131,7 +131,7 @@ function PspCharts({ byPsp }) {
       chartRef.current?.destroy()
       chartRef.current = null
     }
-  }, [byPsp])
+  }, [byPsp, theme])
 
   if (!byPsp || byPsp.length === 0) return null
 

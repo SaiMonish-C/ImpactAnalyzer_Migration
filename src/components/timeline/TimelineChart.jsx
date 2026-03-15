@@ -12,6 +12,8 @@ function TimelineChart({ buckets, theme }) {
     const ctx = canvasRef.current
     if (!ctx) return
 
+    chartRef.current?.destroy()
+
     const dark         = theme !== 'light'
     const lineColor    = dark ? '#34D399' : '#10B981'
     const fillColor    = dark ? 'rgba(52,211,153,0.10)' : 'rgba(16,185,129,0.08)'
@@ -109,7 +111,7 @@ function TimelineChart({ buckets, theme }) {
       chartRef.current?.destroy()
       chartRef.current = null
     }
-  }, [])
+  }, [theme])
 
   useEffect(() => {
     if (!chartRef.current) return

@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { analyze, analyzeMulti, analyzeTimeline } from './logic/engine'
 import { exportCsv } from './utils/export'
 import Topbar from './components/layout/Topbar'
@@ -6,24 +6,45 @@ import Footer from './components/layout/Footer'
 import HeroUpload from './components/HeroUpload'
 import LoadingScreen from './components/LoadingScreen'
 import ErrorPanel from './components/ErrorPanel'
+import ConfirmModal from './components/ConfirmModal'
 import SingleResults from './components/results/SingleResults'
 import MultiResults from './components/results/MultiResults'
 import TimelineView from './components/timeline/TimelineView'
 
 const VALID_EXTENSIONS = ['csv', 'xlsx', 'xls']
 
+function getInitialTheme() {
+  try {
+    return localStorage.getItem('ta-theme') || 'dark'
+  } catch {
+    return 'dark'
+  }
+}
+
 function App() {
   const [view, setView]                 = useState('idle')
   const [mode, setMode]                 = useState('single')
-  const [theme, setTheme]               = useState('dark')
+  const [theme, setTheme]               = useState(getInitialTheme)
   const [error, setError]               = useState(null)
   const [data, setData]                 = useState(null)
   const [multiData, setMultiData]       = useState(null)
   const [timelineData, setTimelineData] = useState(null)
   const [activeTab, setActiveTab]       = useState(0)
   const [fileName, setFileName]         = useState('')
+  const [showModal, setShowModal]       = useState(false)
 
-  const handleToggleTheme = () => setTheme(t => t === 'dark' ? 'light' : 'dark')
+  useEffect(() => {
+    document.documentElement.setAttribute('data-theme', theme)
+    try {
+      localStorage.setItem('ta-theme', theme)
+    } catch {
+      // storage unavailable — continue without persistence
+    }
+  }, [theme])
+
+  function handleToggleTheme() {
+    setTheme(t => t === 'dark' ? 'light' : 'dark')
+  }
 
   function handleReset() {
     setData(null)
@@ -34,6 +55,23 @@ function App() {
     setActiveTab(0)
     setMode('single')
     setView('idle')
+  }
+
+  function handleNewAnalysis() {
+    setShowModal(true)
+  }
+
+  function handleModalConfirm() {
+    setShowModal(false)
+    handleReset()
+  }
+
+  function handleModalCancel() {
+    setShowModal(false)
+  }
+
+  function handleBrandClick() {
+    if (view !== 'idle') setShowModal(true)
   }
 
   function handleModeChange(newMode) {
@@ -152,7 +190,7 @@ function App() {
           timelineData={timelineData}
           fileName={fileName}
           theme={theme}
-          onNew={handleReset}
+          onNew={handleNewAnalysis}
         />
       )
     }
@@ -163,8 +201,9 @@ function App() {
             multiData={multiData}
             activeTab={activeTab}
             onTabChange={setActiveTab}
+            theme={theme}
             onExport={handleExport}
-            onNew={handleReset}
+            onNew={handleNewAnalysis}
           />
         )
       }
@@ -173,8 +212,9 @@ function App() {
           <SingleResults
             data={data}
             fileName={fileName}
+            theme={theme}
             onExport={handleExport}
-            onNew={handleReset}
+            onNew={handleNewAnalysis}
           />
         )
       }
@@ -192,11 +232,18 @@ function App() {
     <>
       <div id="vanta-bg" className="vanta-bg"></div>
       <div className="app">
-        <Topbar theme={theme} onToggleTheme={handleToggleTheme} />
+        <Topbar theme={theme} onToggleTheme={handleToggleTheme} onBrandClick={handleBrandClick} />
         <main id="main-content">
           {renderMainContent()}
         </main>
-        <div id="modal-container"></div>
+        <div id="modal-container">
+          {showModal && (
+            <ConfirmModal
+              onConfirm={handleModalConfirm}
+              onCancel={handleModalCancel}
+            />
+          )}
+        </div>
         <Footer />
       </div>
     </>

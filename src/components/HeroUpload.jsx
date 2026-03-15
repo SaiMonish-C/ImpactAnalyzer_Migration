@@ -51,7 +51,6 @@ function HeroUpload({ mode, onModeChange, onFilesSelected }) {
       <div className="hero-modes stagger stagger-2">
         <button
           className={`mode-card${!isTimeline ? ' mode-card-active' : ''}`}
-          data-mode="standard"
           onClick={() => onModeChange('single')}
         >
           <div className="mode-card-header">
@@ -67,7 +66,6 @@ function HeroUpload({ mode, onModeChange, onFilesSelected }) {
 
         <button
           className={`mode-card${isTimeline ? ' mode-card-active' : ''}`}
-          data-mode="timeline"
           onClick={() => onModeChange('timeline')}
         >
           <div className="mode-card-header">

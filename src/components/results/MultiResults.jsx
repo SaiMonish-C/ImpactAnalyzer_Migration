@@ -4,13 +4,12 @@ import PspCharts from './PspCharts'
 import WarningsPanel from './WarningsPanel'
 import { IconCheck, IconFile, IconDownload, IconClock, IconWarn } from '../Icons'
 
-function MultiResults({ multiData, activeTab, onTabChange, onExport, onNew }) {
+function MultiResults({ multiData, activeTab, onTabChange, theme, onExport, onNew }) {
   const tabs = [
     { idx: 0, label: `All Files (${multiData.file_count})` },
     ...multiData.files.map((f, i) => ({ idx: i + 1, label: f.file_name })),
   ]
 
-  // activeTab 0 → aggregate; activeTab N → files[N-1]
   const activeData = activeTab === 0
     ? multiData.aggregate
     : multiData.files[activeTab - 1]
@@ -72,7 +71,7 @@ function MultiResults({ multiData, activeTab, onTabChange, onExport, onNew }) {
         <>
           <SummaryCards summary={activeData.summary} />
           <CurrencyTable data={activeData.by_currency} />
-          <PspCharts key={activeTab} byPsp={activeData.by_psp} />
+          <PspCharts key={activeTab} byPsp={activeData.by_psp} theme={theme} />
           <WarningsPanel warnings={activeData.warnings} />
         </>
       )}
