@@ -1,5 +1,41 @@
-function HeroUpload({ mode }) {
+import { useRef, useState } from 'react'
+
+function HeroUpload({ mode, onModeChange, onFilesSelected }) {
   const isTimeline = mode === 'timeline'
+  const inputRef = useRef(null)
+  const [isDragOver, setIsDragOver] = useState(false)
+
+  function handleZoneClick() {
+    inputRef.current?.click()
+  }
+
+  function handleInputClick(e) {
+    // Prevent click from bubbling back up to the zone and opening picker twice
+    e.stopPropagation()
+  }
+
+  function handleInputChange(e) {
+    if (e.target.files?.length) {
+      onFilesSelected([...e.target.files])
+      // Reset so the same file can be re-selected after an error
+      e.target.value = ''
+    }
+  }
+
+  function handleDragOver(e) {
+    e.preventDefault()
+    setIsDragOver(true)
+  }
+
+  function handleDragLeave() {
+    setIsDragOver(false)
+  }
+
+  function handleDrop(e) {
+    e.preventDefault()
+    setIsDragOver(false)
+    onFilesSelected([...e.dataTransfer.files])
+  }
 
   return (
     <div className="hero">
@@ -13,7 +49,11 @@ function HeroUpload({ mode }) {
       </div>
 
       <div className="hero-modes stagger stagger-2">
-        <button className={`mode-card${!isTimeline ? ' mode-card-active' : ''}`} data-mode="standard">
+        <button
+          className={`mode-card${!isTimeline ? ' mode-card-active' : ''}`}
+          data-mode="standard"
+          onClick={() => onModeChange('single')}
+        >
           <div className="mode-card-header">
             <div className="mode-card-icon mc-icon-standard">
               <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
@@ -25,7 +65,11 @@ function HeroUpload({ mode }) {
           <p className="mode-card-desc">Deduplicate exports, convert 165+ currencies to USD, and view precise per-currency breakdowns.</p>
         </button>
 
-        <button className={`mode-card${isTimeline ? ' mode-card-active' : ''}`} data-mode="timeline">
+        <button
+          className={`mode-card${isTimeline ? ' mode-card-active' : ''}`}
+          data-mode="timeline"
+          onClick={() => onModeChange('timeline')}
+        >
           <div className="mode-card-header">
             <div className="mode-card-icon mc-icon-timeline">
               <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
@@ -39,13 +83,23 @@ function HeroUpload({ mode }) {
         </button>
       </div>
 
-      <div className="upload-zone stagger stagger-3" id="upload-zone">
+      <div
+        className={`upload-zone stagger stagger-3${isDragOver ? ' drag-over' : ''}`}
+        id="upload-zone"
+        onClick={handleZoneClick}
+        onDragOver={handleDragOver}
+        onDragLeave={handleDragLeave}
+        onDrop={handleDrop}
+      >
         <input
+          ref={inputRef}
           type="file"
           id="file-input"
           accept=".csv,.xlsx,.xls"
-          multiple={mode === 'multi'}
+          multiple={mode !== 'timeline'}
           hidden
+          onClick={handleInputClick}
+          onChange={handleInputChange}
         />
         <div className="upload-inner">
           <div className="upload-icon">

@@ -3,7 +3,7 @@ import CurrencyTable from './CurrencyTable'
 import WarningsPanel from './WarningsPanel'
 import { IconCheck, IconFile, IconDownload, IconClock, IconWarn } from '../Icons'
 
-function MultiResults({ multiData, activeTab, onTabChange, onNew }) {
+function MultiResults({ multiData, activeTab, onTabChange, onExport, onNew }) {
   const tabs = [
     { idx: 0, label: `All Files (${multiData.file_count})` },
     ...multiData.files.map((f, i) => ({ idx: i + 1, label: f.file_name })),
@@ -25,7 +25,7 @@ function MultiResults({ multiData, activeTab, onTabChange, onNew }) {
           </div>
         </div>
         <div className="results-actions">
-          <button className="btn btn-primary" disabled>
+          <button className="btn btn-primary" onClick={onExport}>
             {IconDownload} Export CSV
           </button>
           <button className="btn btn-ghost" onClick={onNew}>New Analysis</button>

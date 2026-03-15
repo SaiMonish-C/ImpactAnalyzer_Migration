@@ -3,7 +3,7 @@ import CurrencyTable from './CurrencyTable'
 import WarningsPanel from './WarningsPanel'
 import { IconCheck, IconFile, IconDownload, IconClock } from '../Icons'
 
-function SingleResults({ data, fileName, onNew }) {
+function SingleResults({ data, fileName, onExport, onNew }) {
   return (
     <div className="results-page">
       <div className="results-header stagger stagger-1">
@@ -15,7 +15,7 @@ function SingleResults({ data, fileName, onNew }) {
           </div>
         </div>
         <div className="results-actions">
-          <button className="btn btn-primary" disabled>
+          <button className="btn btn-primary" onClick={onExport}>
             {IconDownload} Export CSV
           </button>
           <button className="btn btn-ghost" onClick={onNew}>New Analysis</button>
