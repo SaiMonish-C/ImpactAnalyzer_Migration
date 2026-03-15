@@ -1,5 +1,6 @@
 import SummaryCards from './SummaryCards'
 import CurrencyTable from './CurrencyTable'
+import PspCharts from './PspCharts'
 import WarningsPanel from './WarningsPanel'
 import { IconCheck, IconFile, IconDownload, IconClock, IconWarn } from '../Icons'
 
@@ -71,7 +72,7 @@ function MultiResults({ multiData, activeTab, onTabChange, onExport, onNew }) {
         <>
           <SummaryCards summary={activeData.summary} />
           <CurrencyTable data={activeData.by_currency} />
-          {/* PSP chart — Batch 3 */}
+          <PspCharts key={activeTab} byPsp={activeData.by_psp} />
           <WarningsPanel warnings={activeData.warnings} />
         </>
       )}

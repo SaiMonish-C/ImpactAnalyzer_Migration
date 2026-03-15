@@ -1,5 +1,6 @@
 import SummaryCards from './SummaryCards'
 import CurrencyTable from './CurrencyTable'
+import PspCharts from './PspCharts'
 import WarningsPanel from './WarningsPanel'
 import { IconCheck, IconFile, IconDownload, IconClock } from '../Icons'
 
@@ -30,7 +31,7 @@ function SingleResults({ data, fileName, onExport, onNew }) {
 
       <SummaryCards summary={data.summary} />
       <CurrencyTable data={data.by_currency} />
-      {/* PSP chart — Batch 3 */}
+      <PspCharts byPsp={data.by_psp} />
       <WarningsPanel warnings={data.warnings} />
     </div>
   )
